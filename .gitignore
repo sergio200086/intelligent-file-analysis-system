@@ -1,0 +1,36 @@
+# --- Entorno Virtual ---
+venv/
+.env
+__pycache__/
+*.pyc
+
+# --- Modelos y Pesos (CRÍTICO) ---
+# Ignoramos las carpetas donde guardamos los modelos entrenados
+final_model_ready/
+resultados_modelo/
+my_trained_model/
+checkpoint-*/
+
+# Ignoramos archivos de pesos específicos por extensión
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.onnx
+
+# --- Datasets y Caché ---
+# Hugging Face descarga mucha basura en estas carpetas
+.cache/
+downloads/
+datasets_cache/
+
+# --- Logs de entrenamiento (TensorBoard) ---
+runs/
+logs/
+
+# --- Notebooks ---
+.ipynb_checkpoints
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
