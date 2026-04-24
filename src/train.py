@@ -18,7 +18,7 @@ def main ():
     print(f"{len(df)} examples loaded")
 
     label_encoder = LabelEncoder()
-    df['label_id'] = label_encoder.fit_transform(df['label'])
+    df['label_id'] = label_encoder.fit_transform(df['label']) # type: ignore
 
     print(f"\n Labels mapping: ")
     for i, label in enumerate(label_encoder.classes_):
@@ -106,7 +106,7 @@ def main ():
     print(f"   Accuracy: {eval_result['eval_accuracy']:.2%}")
     print(f"   Loss: {eval_result['eval_loss']:.4f}")
 
-    predictions = trainer.predict(test_tokenized)
+    predictions = trainer.predict(test_tokenized) # type: ignore
     pred_ids = np.argmax(predictions.predictions, axis = 1)
     pred_labels = label_encoder.inverse_transform(pred_ids)
     true_labels = label_encoder.inverse_transform(labels_test)
