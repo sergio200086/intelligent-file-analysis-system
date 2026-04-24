@@ -3,49 +3,48 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 
 
+print("Loading model...")
+tokenizer = AutoTokenizer.from_pretrained("./model_classificator_final")
+model = AutoModelForSequenceClassification.from_pretrained("./model_classificator_final", dtype="auto", device_map="auto")
+print("✅ Model loaded successfully")
 
-def main():
+labels_map = {
+    0: "contract",
+    1:"email",
+    2:"invoice",
+    3: "report"
+}
 
-    print("Loading model...")
-    tokenizer = AutoTokenizer.from_pretrained("./model_classificator_final")
-    model = AutoModelForSequenceClassification.from_pretrained("./model_classificator_final", dtype="auto", device_map="auto")
-    print("✅ Model loaded successfully")
+def classify_document(text):
+    inputs = tokenizer(
+        text,
+        truncation = True,
+        max_length = 128,
+        padding = 'max_length',
+        return_tensors = "pt"
+    )
 
-    labels_map = {
-        0: "contract",
-        1:"email",
-        2:"invoice",
-        3: "report"
+    with torch.no_grad():
+        output = model(**inputs)
+
+    logits = output.logits
+    max_value = torch.argmax(logits, dim= 1).item()
+    label = labels_map[max_value] # type: ignore
+
+    probs = torch.softmax(logits, dim=1)[0]
+    confidence = probs[max_value].item() # type: ignore
+
+    return {
+        "classification": label,
+        "confidence": f"{confidence:.2%}",
+        "probs": {
+            labels_map[i]: f"{prob:.2%}" for i, prob in enumerate(probs)
+        }
     }
 
-    def classify_document(text):
-        inputs = tokenizer(
-            text,
-            truncation = True,
-            max_length = 128,
-            padding = 'max_length',
-            return_tensors = "pt"
-        )
 
-        with torch.no_grad():
-            output = model(**inputs)
 
-        logits = output.logits
-        max_value = torch.argmax(logits, dim= 1).item()
-        label = labels_map[max_value]
-
-        probs = torch.softmax(logits, dim=1)[0]
-        confidence = probs[max_value].item()
-
-        return {
-            "classification": label,
-            "confidence": f"{confidence:.2%}",
-            "probs": {
-                labels_map[i]: f"{prob:.2%}" for i, prob in enumerate(probs)
-            }
-        }
-
-    
+if __name__ == "__main__":
     print("=" * 60)
     print("TESTING CLASSIFIER")
     print("=" * 60)
@@ -68,7 +67,3 @@ def main():
         print(f"All probabilities: ")        
         for label, prob in output["probs"].items():
             print(f"{label} - {prob}")
-            
-
-if __name__ == "__main__":
-    main()

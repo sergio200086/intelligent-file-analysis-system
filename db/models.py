@@ -20,12 +20,12 @@ def insert_document(text, id):
         ids=[id]
     )
 
-def query_document(text, results=1):
+def query_document(text, results=3):
     results = collection.query(
         query_texts=[text],
-        n_results=2
+        n_results=results
     )
-    return results["documents"][0]
+    return results["documents"][0] # type: ignore
 
 
 def answer_question(text):
@@ -33,7 +33,7 @@ def answer_question(text):
     context = "\n".join(results)
 
     response = client_genai.models.generate_content(
-        model="gemini-2.5-flash",
+        model="models/gemini-2.5-flash",
         contents=f"Basándote en estos documentos:\n\n{context}\n\nResponde: {text}"
     )
 
@@ -46,6 +46,6 @@ def answer_question(text):
 # answer_question("my car Radiator doesn't work") 
 
 
-print(answer_question("¿Cuánto facturó Acme Inc?"))
-print(answer_question("¿Cuál es la duración del contrato?"))
-print(answer_question("¿Fue confirmado el pago?"))
+# print(answer_question("¿Cuánto facturó Acme Inc?"))
+# print(answer_question("¿Cuál es la duración del contrato?"))
+# print(answer_question("¿Fue confirmado el pago?"))
