@@ -4,11 +4,15 @@ venv/
 __pycache__/
 *.pyc
 
+my_models/
+
 # --- Modelos y Pesos (CRÍTICO) ---
 # Ignoramos las carpetas donde guardamos los modelos entrenados
 final_model_ready/
 resultados_modelo/
 my_trained_model/
+model_clasificator/
+model_classificator_final/
 checkpoint-*/
 
 # Ignoramos archivos de pesos específicos por extensión
